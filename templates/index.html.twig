@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+{% block title %}Questions{% endblock %}
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Question table</h1>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination text-center">
+                {% for page in pages %}
+                <li class="page-item"><a class="page-link" href="{{ page.link }}">{{ page.page }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name
+                    <form method="post" action="../public/index.php">
+                        <button  type="submit" name="name_asc" class="ml-2" value="name_asc">
+                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                        </button>
+                        <button name="name_desc" type="submit" value="name_desc">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </th>
+                <th>Email
+                    <form method="post" action="../public/index.php">
+                        <button name="email_asc" class="ml-2" value="email_asc">
+                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                        </button>
+                        <button name="email_desc" value="email_desc">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </th>
+                <th>Text</th>
+                <th>Completed
+                    <form method="post" action="../public/index.php">
+                        <button name="completed_asc" class="ml-2" value="completed_asc">
+                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                        </button>
+                        <button name="completed_desc" value="completed_desc">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </th>
+                <th>Edited</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+            <tr>
+                <th>{{ task.id }}</th>
+                <td>{{ task.userName}}</td>
+                <td>{{ task.email }}</td>
+                <td>{{ task.text }}</td>
+                <td>{{ task.completed }}</td>
+                <td>{{ task.edited }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <form method="post" action="../public/index.php" >
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="text">Text</label>
+                <input type="text" class="form-control" id="text" name="text" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock%}
