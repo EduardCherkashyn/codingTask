@@ -1,0 +1,36 @@
+version: '3.6'
+services:
+
+  task_php:
+    image: task_php
+    build:
+      context: .
+      target: develop
+    container_name: task_php
+    volumes:
+      - ./:/app
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php7/conf.d/99-overrides.ini
+      - ./docker/supervisor/supervisor.ini:/etc/supervisor.d/supervisor.ini
+    depends_on:
+      - task_php_mysql
+    ports:
+      - 80:80
+    tty: true
+    working_dir: /app
+    # environment:
+    #  XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
+    #  PHP_IDE_CONFIG: "serverName=Docker"
+
+  task_php_mysql:
+    image: mysql:5.7
+    container_name: task_php_mysql
+    restart: always
+    environment:
+       - MYSQL_ROOT_PASSWORD=123123
+       - MYSQL_DATABASE=coding_task
+       - MYSQL_USER=coding_task_user
+       - MYSQL_PASSWORD=123123
+    volumes:
+       - ./mysql_data:/var/lib/mysql
+

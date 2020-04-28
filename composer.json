@@ -1,0 +1,23 @@
+{
+  "name": "eduard/cherkashyn",
+  "description": "Coding task",
+  "license": "top-secret",
+  "authors": [
+    {
+      "name": "Eduard Cherkashyn",
+      "email": "edikparker@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require-dev": {
+    "doctrine/orm": "^2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "require": {
+    "twig/twig": "1.*"
+  }
+}

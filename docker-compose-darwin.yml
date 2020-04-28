@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+
+  music_school:
+    volumes:
+      -  music_school-sync:/symfony
+
+volumes:
+  music_school-sync:
+    external: true
