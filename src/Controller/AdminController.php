@@ -35,7 +35,7 @@ class AdminController extends TaskController
         return new Response($this->twig->render('login.html.twig',[
             'loginCheckLink' => '/login',
             'errorMessage' => $message,
-            'baseLink' => ''
+            'baseLink' => '/'
         ]));
     }
 
