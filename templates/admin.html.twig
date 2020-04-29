@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Admin{% endblock %}
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Admin dashboard</h1>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination text-center">
+                {% for page in pages %}
+                    <li class="page-item"><a class="page-link" href="{{ page.link }}">{{ page.page }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <a class="btn btn-primary" href="{{ logoutLink }}">Logout</a>
+        <a class="btn btn-primary" href="{{ baseLink }}">Back to tasks</a>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Text</th>
+                <th>Completed</th>
+                <th>Edited</th>
+                <th>Save</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <th>{{ task.id }}</th>
+                    <td>{{ task.userName}}</td>
+                    <td>{{ task.email }}</td>
+                    <form method="post" action="{{ updateLink }}">
+                        <td><input type="text" name="text" value="{{ task.text }}" size="50"></td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" name="approve" type="checkbox" id="gridCheck{{ task.id }}" {% if task.completed %}checked{% endif %}>
+                                <label class="form-check-label" for="gridCheck{{ task.id }}">
+                                   Approve
+                                </label>
+                            </div>
+                        </td>
+                        <td>{{ task.edited }}</td>
+                        <td><button type="submit" class="btn btn-primary" name="submit" value="{{ task.id }}">Submit</button></td>
+                    </form>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock%}
