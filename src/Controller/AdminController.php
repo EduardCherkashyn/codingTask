@@ -33,9 +33,9 @@ class AdminController extends TaskController
             }
         }
         return new Response($this->twig->render('login.html.twig',[
-            'loginCheckLink' => $_SERVER['HTTP_HOST'].'/login',
+            'loginCheckLink' => '/login',
             'errorMessage' => $message,
-            'baseLink' => $_SERVER['HTTP_HOST'].'/'
+            'baseLink' => ''
         ]));
     }
 
@@ -44,6 +44,7 @@ class AdminController extends TaskController
         $request = Request::createFromGlobals();
         if($_SESSION['login'] !== 'logged_in'){
             header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
+            exit();
         }
         $entityManager = $this->manager->getEm();
         $taskRepository = $entityManager->getRepository(Task::class);
@@ -58,24 +59,23 @@ class AdminController extends TaskController
         $pages = ceil($pagination->getTotalItemCount()/3);
         $links = [];
         for ($i = 1;$i<=$pages;$i++){
-            $links[$i]['link'] = $request->getBaseUrl().'/admin?page='.$i;
+            $links[$i]['link'] = '/admin?page='.$i;
             $links[$i]['page'] = $i;
         }
 
         return new Response($this->twig->render('admin.html.twig',[
             'tasks' => $pagination,
             'pages' => $links,
-            'indexLink' => $_SERVER['HTTP_HOST'],
-            'logoutLink' => $_SERVER['HTTP_HOST'].'/logout',
-            'updateLink' => $_SERVER['HTTP_HOST'].'/update',
-            'baseLink' => $_SERVER['HTTP_HOST'].'/'
+            'indexLink' => '',
+            'logoutLink' => '/logout',
+            'updateLink' => '/update',
+            'baseLink' => '/'
         ]));
     }
 
     public function logout()
     {
         unset($_SESSION['login']);
-        $request = Request::createFromGlobals();
         header('Location:http://'.$_SERVER['HTTP_HOST']);
     }
 
