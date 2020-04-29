@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block title %}Login{% endblock %}
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Admin Login</h1>
+        <h3>{{ errorMessage }}</h3>
+        <form method="post" action="{{ loginCheckLink }}">
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" class="form-control" id="login"  name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,32 +1,36 @@
 <?php
-session_start();
-use App\Controller\TaskController;
-
 require_once '../vendor/autoload.php';
 require_once '../bootstrap.php';
 
-$container = new DI\Container();
-$loader = new \Twig\Loader\FilesystemLoader('../templates');
-$twig = new \Twig\Environment($loader);
-$task = $container->get(TaskController::class);
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel;
+use Symfony\Component\Routing;
 
-if ($_POST['name'] && $_POST['email'] && $_POST['text']){
-    $task->addTask($_POST, $entityManager);
+
+$request = Request::createFromGlobals();
+$routes = include '../src/app.php';
+
+$context = new Routing\RequestContext();
+$context->fromRequest($request);
+$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
+
+$controllerResolver = new HttpKernel\Controller\ControllerResolver();
+$argumentResolver = new HttpKernel\Controller\ArgumentResolver();
+
+try {
+    $request->attributes->add($matcher->match($request->getPathInfo()));
+
+    $controller = $controllerResolver->getController($request);
+    $arguments = $argumentResolver->getArguments($request, $controller);
+
+    $response = call_user_func_array($controller, $arguments);
+} catch (Routing\Exception\ResourceNotFoundException $exception) {
+    $response = new Response('Not Found', 404);
+} catch (Exception $exception) {
+    $response = new Response('An error occurred', 500);
 }
-if($_POST['name_asc']){
-    $_SESSION['query'] = ['user_name'=>'ASC'];
-}elseif ($_POST['name_desc']){
-    $_SESSION['query'] = ['user_name'=>'DESC'];
-}
-if($_POST['email_asc']){
-    $_SESSION['query'] = ['email'=>'ASC'];
-}elseif ($_POST['email_desc']){
-    $_SESSION['query'] = ['email'=>'DESC'];
-}
-if($_POST['completed_asc']){
-    $_SESSION['query'] = ['completed'=>'ASC'];
-}elseif ($_POST['completed_desc']){
-    $_SESSION['query'] = ['completed'=>'DESC'];
-}
-$paginator = new Knp\Component\Pager\Paginator();
-$task->index($twig, $entityManager, $paginator);
+
+$response->send();
+
+

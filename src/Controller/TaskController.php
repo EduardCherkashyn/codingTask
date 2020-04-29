@@ -9,16 +9,36 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Services\EmObject;
+use App\Services\Filter;
 use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskController
 {
-    public function index($twig, $manager, $paginator)
+    protected $manager;
+    protected $paginator;
+    protected $twig;
+    protected $filterService;
+
+    public function __construct()
     {
-        /** @var EntityManager $manager */
-        $taskRepository = $manager->getRepository(Task::class);
+        $this->manager = new EmObject();
+        $this->paginator = new Paginator();
+        $loader = new \Twig\Loader\FilesystemLoader('../templates');
+        $twig = new \Twig\Environment($loader);
+        $this->twig = $twig;
+        $this->filterService = new Filter();
+    }
+
+    public function index()
+    {
+        $request = Request::createFromGlobals();
+        $this->filterService->checkQueryNeedle($request);
+        $entityManager = $this->manager->getEm();
+        $taskRepository = $entityManager->getRepository(Task::class);
         $filterKey = $_SESSION['query'];
         if($filterKey){
             $tasks = $taskRepository->findBy([],$filterKey);
@@ -27,10 +47,8 @@ class TaskController
             $tasks = $taskRepository->findAll();
         }
 
-        $request = Request::createFromGlobals();
-
         /** @var  Paginator $paginator */
-        $pagination = $paginator->paginate(
+        $pagination = $this->paginator->paginate(
             $tasks, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             3 /*limit per page*/
@@ -42,24 +60,29 @@ class TaskController
             $links[$i]['page'] = $i;
         }
 
-        echo $twig->render('index.html.twig',[
+        return new Response($this->twig->render('index.html.twig',[
             'tasks' => $pagination,
-            'pages' => $links
-        ]);
+            'pages' => $links,
+            'addTaskLink' => $request->getBaseUrl().'/addTask',
+            'indexLink' => $request->getBaseUrl(),
+            'loginLink' => $request->getBaseUrl().'/login'
+        ]));
+
     }
 
-    public function addTask(array $data, $manager)
+    public function addTask()
     {
+        $request = Request::createFromGlobals();
         $task = new Task();
-        $task->setEmail($data['email']);
-        $task->setText($data['text']);
-        $task->setUserName($data['name']);
+        $task->setEmail($request->request->get('email'));
+        $task->setText($request->request->get('text'));
+        $task->setUserName($request->request->get('name'));
         $task->setEdited(false);
         $task->setCompleted(false);
+        $manager = $this->manager->getEm();
         /** @var EntityManager $manager */
         $manager->persist($task);
         $manager->flush();
-        header('Location:http://127.0.0.1');
-
+        header('Location:http://'.$request->getBaseUrl());
     }
 }

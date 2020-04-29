@@ -10,12 +10,13 @@
                 {% endfor %}
             </ul>
         </nav>
+        <a class="btn btn-primary" href="{{ loginLink }}">Login</a>
         <table class="table">
             <thead>
             <tr>
                 <th>#</th>
                 <th>Name
-                    <form method="post" action="../public/index.php">
+                    <form method="post" action="{{ indexLink }}">
                         <button  type="submit" name="name_asc" class="ml-2" value="name_asc">
                             <i class="fa fa-arrow-up" aria-hidden="true"></i>
                         </button>
@@ -25,7 +26,7 @@
                     </form>
                 </th>
                 <th>Email
-                    <form method="post" action="../public/index.php">
+                    <form method="post" action="{{ indexLink }}">
                         <button name="email_asc" class="ml-2" value="email_asc">
                             <i class="fa fa-arrow-up" aria-hidden="true"></i>
                         </button>
@@ -36,7 +37,7 @@
                 </th>
                 <th>Text</th>
                 <th>Completed
-                    <form method="post" action="../public/index.php">
+                    <form method="post" action="{{ indexLink }}">
                         <button name="completed_asc" class="ml-2" value="completed_asc">
                             <i class="fa fa-arrow-up" aria-hidden="true"></i>
                         </button>
@@ -61,7 +62,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <form method="post" action="../public/index.php" >
+        <form method="post" action="{{ addTaskLink }}" >
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name" required>
