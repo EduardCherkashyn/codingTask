@@ -1,4 +1,0 @@
-version: '2'
-syncs:
-  music_school-sync:
-    src: './'
