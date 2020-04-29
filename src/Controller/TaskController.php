@@ -86,6 +86,6 @@ class TaskController
         $manager->persist($task);
         $manager->flush();
         $_SESSION['Success_message'] = 'Your request is successful!';
-        header('Location:http://.'.$_SERVER['HTTP_HOST']);
+        header('Location:http://'.$_SERVER['HTTP_HOST']);
     }
 }
