@@ -20,22 +20,22 @@ class AdminController extends TaskController
     {
         $request = Request::createFromGlobals();
         if($_SESSION['login'] === 'logged_in'){
-            header('Location:http://'.$request->getBaseUrl().'/admin');
+            header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
         }
         if($request->getMethod() === 'POST') {
             $login = $request->request->get('login');
             $password = $request->request->get('password');
             if ($login === 'admin' && $password === '123') {
                 $_SESSION['login'] = 'logged_in';
-                header('Location:http://'.$request->getBaseUrl().'/admin');
+                header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
             } else {
                 $message = 'Wrong Credentials!';
             }
         }
         return new Response($this->twig->render('login.html.twig',[
-            'loginCheckLink' => $request->getBaseUrl().'/login',
+            'loginCheckLink' => $_SERVER['HTTP_HOST'].'/login',
             'errorMessage' => $message,
-            'baseLink' => $request->getBaseUrl().'/'
+            'baseLink' => $_SERVER['HTTP_HOST'].'/'
         ]));
     }
 
@@ -43,7 +43,7 @@ class AdminController extends TaskController
     {
         $request = Request::createFromGlobals();
         if($_SESSION['login'] !== 'logged_in'){
-            header('Location:http://'.$request->getBaseUrl().'/login');
+            header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
         }
         $entityManager = $this->manager->getEm();
         $taskRepository = $entityManager->getRepository(Task::class);
@@ -65,10 +65,10 @@ class AdminController extends TaskController
         return new Response($this->twig->render('admin.html.twig',[
             'tasks' => $pagination,
             'pages' => $links,
-            'indexLink' => $request->getBaseUrl(),
-            'logoutLink' => $request->getBaseUrl().'/logout',
-            'updateLink' => $request->getBaseUrl().'/update',
-            'baseLink' => $request->getBaseUrl().'/'
+            'indexLink' => $_SERVER['HTTP_HOST'],
+            'logoutLink' => $_SERVER['HTTP_HOST'].'/logout',
+            'updateLink' => $_SERVER['HTTP_HOST'].'/update',
+            'baseLink' => $_SERVER['HTTP_HOST'].'/'
         ]));
     }
 
@@ -76,14 +76,14 @@ class AdminController extends TaskController
     {
         unset($_SESSION['login']);
         $request = Request::createFromGlobals();
-        header('Location:http://'.$request->getBaseUrl());
+        header('Location:http://'.$_SERVER['HTTP_HOST']);
     }
 
     public function update()
     {
         $request = Request::createFromGlobals();
         if($_SESSION['login'] !== 'logged_in'){
-            header('Location:http://'.$request->getBaseUrl().'/login');
+            header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
             die();
         }
         $entityManager = $this->manager->getEm();
@@ -100,6 +100,6 @@ class AdminController extends TaskController
         }
         $entityManager->persist($task);
         $entityManager->flush();
-        header('Location:http://'.$request->getBaseUrl().'/admin');
+        header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
     }
 }
