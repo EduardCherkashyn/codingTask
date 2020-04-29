@@ -59,13 +59,16 @@ class TaskController
             $links[$i]['link'] = $request->getBaseUrl().'/?page='.$i;
             $links[$i]['page'] = $i;
         }
+        $message = $_SESSION['Success_message'];
+        unset($_SESSION['Success_message']);
 
         return new Response($this->twig->render('index.html.twig',[
             'tasks' => $pagination,
             'pages' => $links,
             'addTaskLink' => $request->getBaseUrl().'/addTask',
             'indexLink' => $request->getBaseUrl(),
-            'loginLink' => $request->getBaseUrl().'/login'
+            'loginLink' => $request->getBaseUrl().'/login',
+            'message' => $message
         ]));
 
     }
@@ -83,6 +86,7 @@ class TaskController
         /** @var EntityManager $manager */
         $manager->persist($task);
         $manager->flush();
+        $_SESSION['Success_message'] = 'Your request is successful!';
         header('Location:http://'.$request->getBaseUrl());
     }
 }
