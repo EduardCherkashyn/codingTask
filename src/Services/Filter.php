@@ -8,7 +8,6 @@ class Filter
 {
     public function checkQueryNeedle(Request $request)
     {
-        session_start();
         if($request->request->get('name_asc')){
             $_SESSION['query'] = ['user_name'=>'ASC'];
         }elseif ($request->request->get('name_desc')){
