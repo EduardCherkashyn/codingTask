@@ -58,6 +58,12 @@ class TaskController
         for ($i = 1;$i<=$pages;$i++){
             $links[$i]['link'] = '/?page='.$i;
             $links[$i]['page'] = $i;
+            if($request->getRequestUri() === $links[$i]['link']){
+                $links[$i]['active'] = true;
+            }
+            if($request->getRequestUri() === '/'){
+                $links[1]['active'] = true;
+            }
         }
         $message = $_SESSION['Success_message'];
         unset($_SESSION['Success_message']);

@@ -6,7 +6,7 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination text-center">
                 {% for page in pages %}
-                    <li class="page-item"><a class="page-link" href="{{ page.link }}">{{ page.page }}</a></li>
+                    <li class="page-item {% if page.active %}active{% endif %}"><a class="page-link" href="{{ page.link }}">{{ page.page }}</a></li>
                 {% endfor %}
             </ul>
         </nav>

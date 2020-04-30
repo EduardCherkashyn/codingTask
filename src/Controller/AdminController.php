@@ -62,8 +62,13 @@ class AdminController extends TaskController
         for ($i = 1;$i<=$pages;$i++){
             $links[$i]['link'] = '/admin?page='.$i;
             $links[$i]['page'] = $i;
+            if($request->getRequestUri() === $links[$i]['link']){
+                $links[$i]['active'] = true;
+            }
+            if($request->getRequestUri() === '/admin'){
+                $links[1]['active'] = true;
+            }
         }
-
         return new Response($this->twig->render('admin.html.twig',[
             'tasks' => $pagination,
             'pages' => $links,
