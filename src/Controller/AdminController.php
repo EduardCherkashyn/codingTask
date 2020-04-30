@@ -18,6 +18,7 @@ class AdminController extends TaskController
 {
     public function index()
     {
+        unset($_SESSION['query']);
         $request = Request::createFromGlobals();
         if($_SESSION['login'] === 'logged_in'){
             header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
@@ -76,7 +77,11 @@ class AdminController extends TaskController
     public function logout()
     {
         unset($_SESSION['login']);
-        header('Location:http://'.$_SERVER['HTTP_HOST']);
+        unset($_SESSION['query']);
+        $request = Request::createFromGlobals();
+        if (!$request->isXmlHttpRequest()) {
+            header('Location:http://' . $_SERVER['HTTP_HOST']);
+        }
     }
 
     public function update()
