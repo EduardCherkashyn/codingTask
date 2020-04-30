@@ -18,14 +18,11 @@
     }
   },
   "require": {
-    "php-di/php-di": "dev-master",
     "symfony/http-foundation": "^5.1@dev",
     "symfony/routing": "^5.1@dev",
     "symfony/http-kernel": "^5.1@dev",
     "twig/twig": "3.x-dev",
     "doctrine/migrations": "^2.0",
-    "symfony/form": "^5.1@dev",
-    "symfony/twig-bridge": "^5.1@dev",
     "knplabs/knp-paginator-bundle": "^5.2@dev"
   }
 }
