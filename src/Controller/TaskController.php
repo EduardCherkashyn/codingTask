@@ -11,6 +11,7 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Services\EmObject;
 use App\Services\Filter;
+use App\Services\Pagination;
 use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class TaskController
     protected $paginator;
     protected $twig;
     protected $filterService;
+    protected $paginationService;
 
     public function __construct()
     {
@@ -31,51 +33,29 @@ class TaskController
         $twig = new \Twig\Environment($loader);
         $this->twig = $twig;
         $this->filterService = new Filter();
+        $this->paginationService = new Pagination();
     }
 
     public function index()
     {
         $request = Request::createFromGlobals();
-        $this->filterService->checkQueryNeedle($request);
         $entityManager = $this->manager->getEm();
-        $taskRepository = $entityManager->getRepository(Task::class);
-        $filterKey = $_SESSION['query'];
-        if($filterKey){
-            $tasks = $taskRepository->findBy([],$filterKey);
-        }
-        else{
-            $tasks = $taskRepository->findAll();
-        }
-
         /** @var  Paginator $paginator */
         $pagination = $this->paginator->paginate(
-            $tasks, /* query NOT result */
+            $this->filterService->getQueryIndexPage($entityManager, $request), /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
             3 /*limit per page*/
         );
-        $pages = ceil($pagination->getTotalItemCount()/3);
-        $links = [];
-        for ($i = 1;$i<=$pages;$i++){
-            $links[$i]['link'] = '/?page='.$i;
-            $links[$i]['page'] = $i;
-            if($request->getRequestUri() === $links[$i]['link']){
-                $links[$i]['active'] = true;
-            }
-            if($request->getRequestUri() === '/'){
-                $links[1]['active'] = true;
-            }
-        }
         $message = $_SESSION['Success_message'];
         unset($_SESSION['Success_message']);
-        return new Response($this->twig->render('index.html.twig',[
+        return new Response($this->twig->render('index.html.twig', [
             'tasks' => $pagination,
-            'pages' => $links,
+            'pages' => $this->paginationService->getLinks($pagination, $request),
             'addTaskLink' => '/addTask',
             'indexLink' => '',
             'loginLink' => '/login',
             'message' => $message
         ]));
-
     }
 
     public function addTask()
