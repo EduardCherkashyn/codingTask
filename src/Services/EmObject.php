@@ -7,6 +7,7 @@
  */
 
 namespace App\Services;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
@@ -27,11 +28,14 @@ class EmObject
             'driver' => 'pdo_mysql'
         ];
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode,null,
+        $config = Setup::createAnnotationMetadataConfiguration(
+            $paths,
+            $isDevMode,
             null,
-            false);
+            null,
+            false
+        );
         $this->em = EntityManager::create($dbParams, $config);
-
     }
 
     public function getEm()

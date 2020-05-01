@@ -1,5 +1,5 @@
 <?php
-session_id(str_replace('.', '',$_SERVER['REMOTE_ADDR']));
+session_id(str_replace('.', '', $_SERVER['REMOTE_ADDR']));
 session_start();
 require_once '../vendor/autoload.php';
 require_once '../bootstrap.php';
@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
-
 
 $request = Request::createFromGlobals();
 $routes = include '../src/app.php';
@@ -34,5 +33,3 @@ try {
 }
 
 $response->send();
-
-
