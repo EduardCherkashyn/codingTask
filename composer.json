@@ -23,6 +23,7 @@
     "symfony/http-kernel": "^5.1@dev",
     "twig/twig": "3.x-dev",
     "doctrine/migrations": "^2.0",
-    "knplabs/knp-paginator-bundle": "^5.2@dev"
+    "knplabs/knp-paginator-bundle": "^5.2@dev",
+    "php-di/php-di": "dev-master"
   }
 }
