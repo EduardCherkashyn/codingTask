@@ -15,10 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends TaskController
 {
-    public function index()
+    public function index(Request $request)
     {
         unset($_SESSION['query']);
-        $request = Request::createFromGlobals();
         if ($_SESSION['login'] === 'logged_in') {
             header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
         }
@@ -39,9 +38,8 @@ class AdminController extends TaskController
         ]));
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
-        $request = Request::createFromGlobals();
         if ($_SESSION['login'] !== 'logged_in') {
             header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
             exit();
@@ -64,18 +62,16 @@ class AdminController extends TaskController
         ]));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         session_destroy();
-        $request = Request::createFromGlobals();
         if (!$request->isXmlHttpRequest()) {
             header('Location:http://' . $_SERVER['HTTP_HOST']);
         }
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        $request = Request::createFromGlobals();
         if ($_SESSION['login'] !== 'logged_in') {
             header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
             die();

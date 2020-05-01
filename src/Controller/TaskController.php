@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class TaskController
 {
@@ -25,20 +26,22 @@ class TaskController
     protected $filterService;
     protected $paginationService;
 
-    public function __construct()
-    {
-        $this->manager = new EmObject();
-        $this->paginator = new Paginator();
-        $loader = new \Twig\Loader\FilesystemLoader('../templates');
-        $twig = new \Twig\Environment($loader);
+    public function __construct(
+        EmObject $emObject,
+        Paginator $paginator,
+        Filter $filterService,
+        Pagination $paginationService,
+        Environment $twig
+    ) {
+        $this->manager = $emObject;
+        $this->paginator = $paginator;
         $this->twig = $twig;
-        $this->filterService = new Filter();
-        $this->paginationService = new Pagination();
+        $this->filterService = $filterService;
+        $this->paginationService = $paginationService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $request = Request::createFromGlobals();
         $entityManager = $this->manager->getEm();
         /** @var  Paginator $paginator */
         $pagination = $this->paginator->paginate(
@@ -58,9 +61,8 @@ class TaskController
         ]));
     }
 
-    public function addTask()
+    public function addTask(Request $request)
     {
-        $request = Request::createFromGlobals();
         $task = new Task();
         $task->setEmail($request->request->get('email'));
         $task->setText($request->request->get('text'));
