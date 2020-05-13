@@ -32,6 +32,7 @@ class AdminController extends TaskController
             }
             $message = 'Wrong Credentials!';
         }
+
         return new Response($this->twig->render('login.html.twig', [
             'loginCheckLink' => '/login',
             'errorMessage' => $message,
@@ -91,7 +92,7 @@ class AdminController extends TaskController
         }
         $entityManager->persist($task);
         $entityManager->flush();
-        return new RedirectResponse('/admin');
 
+        return new RedirectResponse('/admin');
     }
 }

@@ -52,6 +52,7 @@ class TaskController
         );
         $message = $_SESSION['Success_message'];
         unset($_SESSION['Success_message']);
+
         return new Response($this->twig->render('index.html.twig', [
             'tasks' => $pagination,
             'pages' => $this->paginationService->getLinks($pagination, $request),
@@ -75,6 +76,7 @@ class TaskController
         $manager->persist($task);
         $manager->flush();
         $_SESSION['Success_message'] = 'Your request is successful!';
+
         return new RedirectResponse('/');
     }
 }
