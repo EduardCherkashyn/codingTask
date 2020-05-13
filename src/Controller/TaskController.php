@@ -14,6 +14,7 @@ use App\Services\Filter;
 use App\Services\Pagination;
 use Doctrine\ORM\EntityManager;
 use Knp\Component\Pager\Paginator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -74,6 +75,6 @@ class TaskController
         $manager->persist($task);
         $manager->flush();
         $_SESSION['Success_message'] = 'Your request is successful!';
-        header('Location:http://'.$_SERVER['HTTP_HOST']);
+        return new RedirectResponse('/');
     }
 }

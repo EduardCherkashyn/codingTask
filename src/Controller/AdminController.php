@@ -10,6 +10,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use Knp\Component\Pager\Paginator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,17 +20,17 @@ class AdminController extends TaskController
     {
         unset($_SESSION['query']);
         if ($_SESSION['login'] === 'logged_in') {
-            header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
+            return new RedirectResponse('/admin');
+
         }
         if ($request->getMethod() === 'POST') {
             $login = $request->request->get('login');
             $password = $request->request->get('password');
             if ($login === 'admin' && $password === '123') {
                 $_SESSION['login'] = 'logged_in';
-                header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
-            } else {
-                $message = 'Wrong Credentials!';
+                return new RedirectResponse('/admin');
             }
+            $message = 'Wrong Credentials!';
         }
         return new Response($this->twig->render('login.html.twig', [
             'loginCheckLink' => '/login',
@@ -41,8 +42,7 @@ class AdminController extends TaskController
     public function edit(Request $request)
     {
         if ($_SESSION['login'] !== 'logged_in') {
-            header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
-            exit();
+            return new RedirectResponse('/login');
         }
         $entityManager = $this->manager->getEm();
         /** @var  Paginator $paginator */
@@ -66,15 +66,14 @@ class AdminController extends TaskController
     {
         session_destroy();
         if (!$request->isXmlHttpRequest()) {
-            header('Location:http://' . $_SERVER['HTTP_HOST']);
+            return new RedirectResponse('/');
         }
     }
 
     public function update(Request $request)
     {
         if ($_SESSION['login'] !== 'logged_in') {
-            header('Location:http://'.$_SERVER['HTTP_HOST'].'/login');
-            die();
+            return new RedirectResponse('/login');
         }
         $entityManager = $this->manager->getEm();
         /* @var \App\Entity\Task $task*/
@@ -83,6 +82,8 @@ class AdminController extends TaskController
         $approve = $request->request->get('approve');
         if ($approve == true) {
             $task->setCompleted(true);
+        } else{
+            $task->setCompleted(false);
         }
         if ($task->getText() !== $text) {
             $task->setText($text);
@@ -90,6 +91,7 @@ class AdminController extends TaskController
         }
         $entityManager->persist($task);
         $entityManager->flush();
-        header('Location:http://'.$_SERVER['HTTP_HOST'].'/admin');
+        return new RedirectResponse('/admin');
+
     }
 }
